@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delivery Executive Assistant</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-content">
+            <div class="delivery-truck">
+                <i class="fas fa-truck"></i>
+            </div>
+            <h2>Delivery Assistant</h2>
+            <p>Connecting to your digital assistant...</p>
+            <div class="loading-dots">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Screen -->
+    <div id="login-screen" class="login-screen hidden">
+        <div class="login-container">
+            <div class="login-header">
+                <i class="fas fa-truck-fast"></i>
+                <h1>Delivery Assistant</h1>
+                <p>Your AI-powered delivery companion</p>
+            </div>
+            
+            <div class="login-form">
+                <div class="input-group">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="username" placeholder="Username" value="demo_user">
+                </div>
+                
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="password" placeholder="Password" value="demo123">
+                </div>
+                
+                <button id="login-btn" class="login-button">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Sign In
+                </button>
+                
+                <div class="demo-info">
+                    <p><strong>Demo Credentials:</strong></p>
+                    <p>Username: demo_user | Password: demo123</p>
+                    <p><small>Other users: john_doe, jane_smith, mike_wilson (password: password123)</small></p>
+                </div>
+            </div>
+            
+            <div id="login-error" class="error-message hidden"></div>
+        </div>
+    </div>
+
+    <!-- Main Chat Interface -->
+    <div id="chat-interface" class="chat-interface hidden">
+        <!-- Header -->
+        <header class="chat-header">
+            <div class="header-left">
+                <div class="user-avatar">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <div class="user-info">
+                    <h3 id="user-name">Demo User</h3>
+                    <span id="user-status" class="status-available">Available</span>
+                </div>
+            </div>
+            
+            <div class="header-right">
+                <button id="deliveries-btn" class="header-btn" title="My Deliveries">
+                    <i class="fas fa-box"></i>
+                    <span id="active-deliveries-count">0</span>
+                </button>
+                <button id="profile-btn" class="header-btn" title="Profile">
+                    <i class="fas fa-cog"></i>
+                </button>
+                <button id="logout-btn" class="header-btn" title="Logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <button class="quick-action-btn" data-message="What should I do if a package is damaged during delivery?">
+                <i class="fas fa-exclamation-triangle"></i>
+                Damaged Package
+            </button>
+            <button class="quick-action-btn" data-message="Customer is not available for delivery. What's the procedure?">
+                <i class="fas fa-door-closed"></i>
+                Customer Unavailable
+            </button>
+            <button class="quick-action-btn" data-message="My GPS is not working properly. How do I fix it?">
+                <i class="fas fa-map-marker-alt"></i>
+                GPS Issues
+            </button>
+            <button class="quick-action-btn" data-message="How do I handle a COD (Cash on Delivery) order?">
+                <i class="fas fa-money-bill"></i>
+                COD Process
+            </button>
+            <button class="quick-action-btn" data-message="My vehicle broke down during delivery. What should I do?">
+                <i class="fas fa-wrench"></i>
+                Vehicle Breakdown
+            </button>
+            <button class="quick-action-btn" data-message="How are my earnings calculated and when do I get paid?">
+                <i class="fas fa-chart-line"></i>
+                Earnings Info
+            </button>
+        </div>
+
+        <!-- Chat Messages -->
+        <div class="chat-container">
+            <div id="chat-messages" class="chat-messages">
+                <div class="message bot-message">
+                    <div class="message-avatar">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="message-content">
+                        <div class="message-text">
+                            👋 <strong>Hello! I'm your delivery assistant.</strong>
+                            <br><br>I can help you with:
+                            <br>🔧 Package handling procedures
+                            <br>📞 Customer communication
+                            <br>🗺️ Route optimization & GPS issues
+                            <br>🚨 Emergency protocols
+                            <br>💰 Earnings and performance questions
+                            <br>📱 Technical support
+                            <br><br>Try clicking the quick action buttons above or ask me anything!
+                        </div>
+                        <div class="message-time">Just now</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Suggestions -->
+        <div id="suggestions-container" class="suggestions-container hidden">
+            <div class="suggestions-title">💡 Suggested actions:</div>
+            <div id="suggestions" class="suggestions"></div>
+        </div>
+
+        <!-- Input Area -->
+        <div class="input-container">
+            <div class="input-wrapper">
+                <input type="text" id="message-input" placeholder="Ask me anything about deliveries..." autocomplete="off">
+                <button id="send-btn" class="send-button">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+            <div class="input-info">
+                <span id="typing-indicator" class="typing-indicator hidden">
+                    <i class="fas fa-circle-notch fa-spin"></i>
+                    AI is thinking...
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Deliveries Modal -->
+    <div id="deliveries-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-box"></i> My Deliveries</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div id="deliveries-list" class="deliveries-list">
+                <div class="loading">Loading deliveries...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Modal -->
+    <div id="profile-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-user"></i> Profile & Settings</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div id="profile-content" class="profile-content">
+                <div class="loading">Loading profile...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Update Delivery Status Modal -->
+    <div id="update-status-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-edit"></i> Update Delivery Status</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="status-update-form">
+                    <div class="form-group">
+                        <label for="delivery-select">Select Delivery:</label>
+                        <select id="delivery-select" class="form-input">
+                            <option value="">Loading deliveries...</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="status-select">New Status:</label>
+                        <select id="status-select" class="form-input">
+                            <option value="assigned">Assigned</option>
+                            <option value="picked_up">Picked Up</option>
+                            <option value="in_transit">In Transit</option>
+                            <option value="delivered">Delivered</option>
+                            <option value="failed">Failed</option>
+                            <option value="returned">Returned</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="status-notes">Notes (optional):</label>
+                        <textarea id="status-notes" class="form-input" rows="3" placeholder="Add any notes about this status update..."></textarea>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary modal-close">Cancel</button>
+                        <button type="submit" class="btn-primary">Update Status</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Knowledge Base Search Modal -->
+    <div id="knowledge-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-book"></i> Knowledge Base</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="search-container">
+                    <input type="text" id="knowledge-search" placeholder="Search policies and procedures..." class="form-input">
+                    <button id="knowledge-search-btn" class="btn-primary">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                </div>
+                <div id="knowledge-results" class="knowledge-results">
+                    <div class="knowledge-placeholder">
+                        <i class="fas fa-lightbulb"></i>
+                        <p>Search for company policies, procedures, and guidelines</p>
+                        <p><small>Try searching for: "damaged package", "customer unavailable", "COD process"</small></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Action Buttons -->
+    <div class="floating-actions">
+        <button id="knowledge-fab" class="fab" title="Knowledge Base">
+            <i class="fas fa-book"></i>
+        </button>
+        <button id="update-status-fab" class="fab" title="Update Delivery Status">
+            <i class="fas fa-edit"></i>
+        </button>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Service Worker Registration -->
+    <script>
+        // Register service worker for offline functionality (optional)
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                // You can add a service worker here for offline functionality
+                console.log('Service Worker support detected');
+            });
+        }
+    </script>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
